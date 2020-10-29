@@ -21,7 +21,9 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        # Your code here
+        # super function here
+        self.capacity = capacity
+        
 
 
     def get_num_slots(self):
@@ -34,7 +36,8 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # use capacity as the max of the list
+        return len(list(self.capacity))
 
 
     def get_load_factor(self):
@@ -42,9 +45,38 @@ class HashTable:
         Return the load factor for this hash table.
 
         Implement this.
-        """
-        # Your code here
 
+        ---------------------------------------------------------------
+         BELOW IS FROM LINK:https://www.d.umn.edu/~gshute/cs2511/slides/hash_tables/sections/slides/hashtable_operations/load_factor.xhtml
+        Q: Average-case?
+
+        A: Let
+        n 	= 	Number of keys stored in T
+        m 	= 	Number of slots in T
+        α 	= 	n/m
+        Note:
+
+            α = average number of elements in a chain, or load factor
+            α can be less than or greater than 1
+            If m is proportional to n (that is, m is chosen as a linear function of n), then n = O(m).
+            In that case,
+
+            α = n/m = O(m)/m = O(1)
+
+        
+        ANOTHER GOOD LINK: https://programming.guide/hash-table-load-factor-and-capacity.html
+        """
+        
+        # number of keys divided by the number of buckets (length of the capacity)
+        
+        # number of keys stored
+        num_of_keys = len(list(self.key))
+        
+        # number of buckets
+        num_of_buckets = self.get_num_slots
+
+        # divide
+        return num_of_keys / num_of_buckets
 
     def fnv1(self, key):
         """
