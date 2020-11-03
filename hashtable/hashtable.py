@@ -46,6 +46,8 @@ class HashTable:
 
         Implement this.
 
+        load factor = num of elements in the hash table / num slots
+
         ---------------------------------------------------------------
          BELOW IS FROM LINK:https://www.d.umn.edu/~gshute/cs2511/slides/hash_tables/sections/slides/hashtable_operations/load_factor.xhtml
         Q: Average-case?
@@ -76,7 +78,7 @@ class HashTable:
         num_of_buckets = self.get_num_slots
 
         # divide
-        return num_of_keys / num_of_buckets
+        return self.num_of_keys / self.num_of_buckets
 
     def fnv1(self, key):
         """
@@ -114,7 +116,22 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        # mari lecture
+        hash_index = self.hash_index(key)
+        if self.table[hash_index] != None:
+            linked_list = self.table[hash_index]
+           did_add_new_node = linked_list.insert_at_head_or_overwrite(Node(HashTableEntry(key, value)))
+           if did_add_new_node:
+               self.num_elements += 1
+        
+        else:
+            linked_list = LinkedList()
+            linked_list.insert_at_head_or_overwrite(HashTableEntry(key, value)))
+            self.table[hash_table] = linked_list
+            self.num_elements += 1
+        
+        if self.get_load_factor() > 0.7:
+            self.resize(self.get_num_slots() * 2 ) # num_slots used instead of capacity
 
     def delete(self, key):
         """
@@ -125,7 +142,19 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        # mari lecture
+        # get hash index
+        hash_index = self.hash_index(key)
+        if self.table[hash_index] != None:
+            linked_list = self.table[hash_table]
+            # use the delete method
+            did_delete_node = linked_list.delete(HashTableEntry(key, None))
+            if did_delete_node != None:
+                self.num_elements -= 1
+                if self.get_load_factor() < 0.2: # check for extra space
+                    self.resize(self.get_num_slots() / 2 ) # cut the table in half
+        else:
+            print('Warning: node not found')
 
     def get(self, key):
         """
@@ -137,6 +166,16 @@ class HashTable:
         """
         # Your code here
 
+        # mari lecture
+        hash_index = self.hash_index(key)
+        if self.table[hash_index] != None:
+            linked_list = self.table[hash_index]
+            node = linked_list.find(HashTableEntry(key, None))
+            if node != None:
+                return node.value.value # get the value from Node and then the value from HashTable Entry
+
+        return self.table[self.hash_index(key)] # from mari lecture
+
 
     def resize(self, new_capacity):
         """
@@ -146,6 +185,30 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # mari lecture
+        old_table = self.table
+        self.table = [None] * int(new_capacity)
+        self.num_elements = 0
+
+        for element in old_table:
+            if element == None:
+                continue
+            curr_node = element.head
+            while curr_node != None:
+                temp = curr_node.next
+                curr_node.next = None
+                hash_index = self.hash_index(curr_node.value.key)
+
+                if self.table[hash_index] != None:
+                    self.table[hash_index].insert_at_head(curr_node)
+                
+                else:
+                    linked_list = LinkedList()
+                    linked_list.insert_at_head_or_overwrite(curr_node)
+                    self.table[hash_index] = linked_list
+
+                    curr_node = temp
+                    self.num_elements += 1 # not neecsary but the number of slots WILL change
 
 
 
