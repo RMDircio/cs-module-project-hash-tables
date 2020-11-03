@@ -21,9 +21,8 @@ class HashTable:
     """
 
     def __init__(self, capacity):
-        # super function here
         self.capacity = capacity
-        
+        hash_table = [None] * 8
 
 
     def get_num_slots(self):
@@ -80,6 +79,7 @@ class HashTable:
         # divide
         return self.num_of_keys / self.num_of_buckets
 
+
     def fnv1(self, key):
         """
         FNV-1 Hash, 64-bit
@@ -96,7 +96,10 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
-        # Your code here
+        hash = 5381 # this is prime
+        for c in key:
+            hash = (hash * 33) + ord(c)
+        return hash
 
 
     def hash_index(self, key):
@@ -107,6 +110,7 @@ class HashTable:
         #return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
+
     def put(self, key, value):
         """
         Store the value with the given key.
@@ -115,23 +119,28 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # set index for key/value
+        index = djb2(key, len(hash_table))
+        hash_table[index] = value
+
+
         # mari lecture
-        hash_index = self.hash_index(key)
-        if self.table[hash_index] != None:
-            linked_list = self.table[hash_index]
-           did_add_new_node = linked_list.insert_at_head_or_overwrite(Node(HashTableEntry(key, value)))
-           if did_add_new_node:
-               self.num_elements += 1
+        # hash_index = self.hash_index(key)
+        # if self.table[hash_index] != None:
+        #     linked_list = self.table[hash_index]
+        #    did_add_new_node = linked_list.insert_at_head_or_overwrite(Node(HashTableEntry(key, value)))
+        #    if did_add_new_node:
+        #        self.num_elements += 1
         
-        else:
-            linked_list = LinkedList()
-            linked_list.insert_at_head_or_overwrite(HashTableEntry(key, value)))
-            self.table[hash_table] = linked_list
-            self.num_elements += 1
+        # else:
+        #     linked_list = LinkedList()
+        #     linked_list.insert_at_head_or_overwrite(HashTableEntry(key, value)))
+        #     self.table[hash_table] = linked_list
+        #     self.num_elements += 1
         
-        if self.get_load_factor() > 0.7:
-            self.resize(self.get_num_slots() * 2 ) # num_slots used instead of capacity
+        # if self.get_load_factor() > 0.7:
+        #     self.resize(self.get_num_slots() * 2 ) # num_slots used instead of capacity
+
 
     def delete(self, key):
         """
@@ -141,20 +150,32 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # set the value to be None
+        self.value = None
+
+
+
+
+
+
+
+
+
+
         # mari lecture
-        # get hash index
-        hash_index = self.hash_index(key)
-        if self.table[hash_index] != None:
-            linked_list = self.table[hash_table]
-            # use the delete method
-            did_delete_node = linked_list.delete(HashTableEntry(key, None))
-            if did_delete_node != None:
-                self.num_elements -= 1
-                if self.get_load_factor() < 0.2: # check for extra space
-                    self.resize(self.get_num_slots() / 2 ) # cut the table in half
-        else:
-            print('Warning: node not found')
+        # # get hash index
+        # hash_index = self.hash_index(key)
+        # if self.table[hash_index] != None:
+        #     linked_list = self.table[hash_table]
+        #     # use the delete method
+        #     did_delete_node = linked_list.delete(HashTableEntry(key, None))
+        #     if did_delete_node != None:
+        #         self.num_elements -= 1
+        #         if self.get_load_factor() < 0.2: # check for extra space
+        #             self.resize(self.get_num_slots() / 2 ) # cut the table in half
+        # else:
+        #     print('Warning: node not found')
+
 
     def get(self, key):
         """
@@ -164,17 +185,20 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        
 
-        # mari lecture
-        hash_index = self.hash_index(key)
-        if self.table[hash_index] != None:
-            linked_list = self.table[hash_index]
-            node = linked_list.find(HashTableEntry(key, None))
-            if node != None:
-                return node.value.value # get the value from Node and then the value from HashTable Entry
 
-        return self.table[self.hash_index(key)] # from mari lecture
+
+
+        # # mari lecture
+        # hash_index = self.hash_index(key)
+        # if self.table[hash_index] != None:
+        #     linked_list = self.table[hash_index]
+        #     node = linked_list.find(HashTableEntry(key, None))
+        #     if node != None:
+        #         return node.value.value # get the value from Node and then the value from HashTable Entry
+
+        # return self.table[self.hash_index(key)] # from mari lecture
 
 
     def resize(self, new_capacity):
